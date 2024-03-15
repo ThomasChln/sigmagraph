@@ -1,0 +1,11 @@
+dependencies:
+  - name: sigma
+    version: 2.4.0
+    src: htmlwidgets/lib/sigma-2.4.0
+    script:
+      - sigma.min.js
+  - name: graphology
+    version: 0.25.4
+    src: htmlwidgets/lib/graphology-0.25.4
+    script:
+      - graphology.umd.min.js

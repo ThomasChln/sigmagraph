@@ -1,0 +1,29 @@
+---
+title: "Sigmagraph"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    theme: spacelab 
+runtime: shiny
+---
+
+```{r}
+library(sigmagraph)
+
+dirpath = system.file('data', package = 'sigmagraph')
+kgraph = get(load(file.path(dirpath, 'epmc_1700_cuis_kg.rds')))
+igraph = kgraph_to_igraph(kgraph)
+sgraph = sigma_mutuals(igraph, niter = 500, node_size = 7)
+
+output$kg = renderSigmagraph(sgraph)
+```
+
+# Graph
+
+##
+
+###
+
+```{r}
+  sigmaNet::sigmaNetOutput('kg', height = '100%')
+```
