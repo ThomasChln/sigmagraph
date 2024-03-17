@@ -1,0 +1,42 @@
+version: '2'
+
+services:
+  manual:
+    build: ./
+    volumes:
+      - ./:/sigmagraph/
+    working_dir: /sigmagraph
+    command: make doc.pdf
+  vignette:
+    build: ./
+    volumes:
+      - ./:/sigmagraph/
+    working_dir: /sigmagraph
+    command: make vignette
+  build_doc:
+    build: ./
+    volumes:
+      - ./:/sigmagraph/
+    working_dir: /sigmagraph/
+    command: make roxygenise
+  pkg_test:
+    build: ./
+    volumes:
+      - ./:/sigmagraph/
+    working_dir: /sigmagraph/
+    command: make devtools_test
+  pkg_check:
+    build: ./
+    volumes:
+      - ./:/sigmagraph/
+    working_dir: /sigmagraph/
+    command: make
+  shiny:
+    build: ./
+    user: shiny
+    command: /usr/bin/shiny-server /srv/shiny-server/shiny-server.conf 
+    ports:
+      - "3838:3838"
+    volumes:
+      - ./:/srv/
+
