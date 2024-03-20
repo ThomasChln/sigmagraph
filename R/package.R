@@ -1,8 +1,9 @@
 #' @import htmlwidgets
 #' @importFrom grDevices colorRampPalette
 #' @importFrom igraph as_data_frame betweenness closeness degree
-#'                    eigenCentrality graph_from_data_frame is.directed
-#'                    layout_nicely pageRank
+#'                    graph_from_data_frame is.directed
+#'                    layout_nicely vertex_attr edge_attr
+#'                    upgrade_graph
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom magrittr %>% %<>% %$%

@@ -19,7 +19,7 @@ sigmagraphOutput <- function(outputId, width = "100%", height = "400px") {
 #' @export
 renderSigmagraph <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) { expr <- substitute(expr) }
-  shinyRenderWidget(expr, parseNetOutput, env, quoted = TRUE)
+  shinyRenderWidget(expr, sigmagraphOutput, env, quoted = TRUE)
 }
 
 #' Build a sigmagraph object from an igraph object
@@ -37,18 +37,14 @@ renderSigmagraph <- function(expr, env = parent.frame(), quoted = FALSE) {
 #'   (colors, sizes, interactivity, etc.).
 #'
 #' @examples
-#' library(igraph)
 #' library(sigmagraph)
-#'
 #' data(lesMis)
 #'
-#' layout <- layout_nicely(lesMis)
-#' sig <- sigma_from_igraph(graph = lesMis, layout = layout)
-#'
+#' sig <- sigma_from_igraph(graph = upgrade_graph(lesMis))
 #' sig
 #' @export
 sigma_from_igraph <- function(graph, layout = NULL, width = NULL,
-                              height = NULL, elementId = NULL){
+                              height = NULL, elementId = NULL) {
 
   directed_flag <- igraph::is.directed(graph)
   graph_parse <- igraph::as_data_frame(graph, what = 'both')
@@ -67,7 +63,7 @@ sigma_from_igraph <- function(graph, layout = NULL, width = NULL,
   colnames(nodes) <- c('label', 'x', 'y')
 
   nodes$key <- seq_len(nrow(nodes))
-  nodes$size <- 1
+  nodes$size <- 3
   nodes[c('x', 'y')] %<>% lapply(as.numeric)
   nodes$color <- '#3182bd'
 
@@ -78,8 +74,8 @@ sigma_from_igraph <- function(graph, layout = NULL, width = NULL,
   edges[c('source', 'target')] %<>% lapply(as.character)
 
   # adapt changes for v2.4.0
-  nodes %<>% nodes_to_json 
-  edges %<>% edges_to_json 
+  nodes %<>% graph_to_json 
+  edges %<>% graph_to_json('edges')
 
   graphOut <- list(nodes = nodes, edges = edges, directed = directed_flag)
 
@@ -92,47 +88,35 @@ sigma_from_igraph <- function(graph, layout = NULL, width = NULL,
   out <- jsonlite::toJSON(graphOut, pretty = TRUE, auto_unbox = TRUE)
   x <- list(data = out, options = options, graph = graph_parse)
 
-  createWidget(name = 'parseNet', x, width = width, height = height,
+  createWidget(name = 'sigmagraph', x, width = width, height = height,
                package = 'sigmagraph', elementId = elementId)
 }
 
-# returns a list of nodes of 2 elements: key and attributes
-nodes_to_json = function(nodes) {
+# separate df in keys fields and attributes
+graph_to_json = function(df_input, type = c('nodes', 'edges')) {
 
-  nodes_attr = setdiff(names(nodes), 'key')
+  type = match.arg(type)
+  fields = switch(type, nodes = 'key',
+                  edges = c('key', 'source', 'target'))
+  num_attrs = switch(type, nodes = c('x', 'y', 'size'), edges = 'size')
+  
+  names_attr = setdiff(names(df_input), fields)
 
-  nodes = lapply(as.data.frame(trimws(t(nodes))), function(vec) {
+  # t breaks if not characters
+  df_input$key %<>% as.character
+  df_json = as.data.frame(trimws(t(df_input))) %>%
+      lapply(graph_row_to_json, names(df_input), fields, names_attr, num_attrs)
 
-      node = setNames(vec, names(nodes)) %>%
-          { list(key = .[['key']], attributes = as.list(.[nodes_attr])) }
-
-      node$attributes[c('x', 'y', 'size')] %<>% lapply(as.numeric)
-
-      node
-    })
-  names(nodes) = NULL
-
-  nodes
+  setNames(df_json, NULL)
 }
 
-# returns a list of edges of 2 elements: key, source, target and attributes
-edges_to_json = function(edges) {
+graph_row_to_json = function(vec, names_df, fields, names_attr, num_attrs) {
 
-  edges_attr = setdiff(names(edges), c('key', 'source', 'target'))
+  vec = setNames(vec, names_df)
+  vec = append(as.list(vec[fields]),
+               list(attributes = as.list(vec[names_attr])))
 
-  edges = lapply(as.data.frame(trimws(t(edges))), function(vec) {
+  vec$attributes[num_attrs] = lapply(vec$attributes[num_attrs], as.numeric)
 
-      edge = setNames(vec, names(edges)) %>% {
-          list(key = .[['key']], source = .[['source']],
-               target = .[['target']], attributes = as.list(.[edges_attr]))
-        }
-
-      edge$attributes[c('size')] %<>% lapply(as.numeric)
-
-      edge
-    })
-  names(edges) = NULL
-
-  edges
+  vec 
 }
-

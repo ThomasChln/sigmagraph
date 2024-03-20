@@ -18,7 +18,6 @@
 #' @examples
 #' library(igraph)
 #' library(sigmagraph)
-#' library(magrittr)
 #'
 #' data(lesMis)
 #'
@@ -29,11 +28,6 @@
 #'   add_node_size(oneSize = 3)
 #' sig
 #'
-#' # using a size attribute
-#' sig <- sigma_from_igraph(graph = lesMis, layout = layout) %>%
-#'   add_node_size(size_metric = 'degree', min_size = 2, max_size = 8)
-#' sig
-#'
 #' # using a vector
 #' custom_size <- log10(degree(lesMis))
 #' sig <- sigma_from_igraph(graph = lesMis, layout = layout) %>%
@@ -42,10 +36,7 @@
 #'
 #' @export
 add_node_size <- function(sigma_obj, min_size = 1, max_size = 3,
-  one_size = NULL, size_vector = NULL,
-  size_metric = c('degree', 'closeness', 'betweenness', 'pageRank', 'eigenCentrality')) {
-
-  size_metric = match.arg(size_metric)
+  one_size = NULL, size_vector = NULL) {
 
   json_obj = jsonlite::fromJSON(sigma_obj$x$data)
   edges <- json_obj$edges
@@ -64,22 +55,6 @@ add_node_size <- function(sigma_obj, min_size = 1, max_size = 3,
     sigma_obj$x$options$minNodeSize <- min_size
     sigma_obj$x$options$maxNodeSize <- max_size
 
-  } else {
-
-    tmp_graph <- igraph::graph_from_data_frame(d = edges,
-                                               directed = directed,
-                                               vertices = nodes$id)
-
-    nodes$attributes$size = switch(size_metric,
-      degree = igraph::degree(tmp_graph),
-      closeness = igraph::closeness(tmp_graph),
-      betweenness = igraph::betweenness(tmp_graph, directed = directed),
-      pageRank = igraph::page_rank(tmp_graph, directed = directed)$vector,
-      eigenCentrality = igraph::eigen_centrality(tmp_graph,
-                                                 directed = directed)$vector)
-
-    sigma_obj$x$options$minNodeSize <- min_size
-    sigma_obj$x$options$maxNodeSize <- max_size
   }
 
   sgraph <- list(nodes = nodes, edges = edges, directed = directed)
@@ -101,12 +76,10 @@ add_node_size <- function(sigma_obj, min_size = 1, max_size = 3,
 #' @examples
 #' library(igraph)
 #' library(sigmagraph)
-#' library(magrittr)
 #'
 #' data(lesMis)
 #'
-#' layout <- layout_nicely(lesMis)
-#' sig <- sigma_from_igraph(graph = lesMis, layout = layout) %>%
+#' sig <- sigma_from_igraph(graph = lesMis) %>%
 #'   add_node_labels(label_attr = 'label')
 #' sig
 #'

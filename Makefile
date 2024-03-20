@@ -35,7 +35,8 @@ devtools_check:
 
 vignette:
 	cd vignettes;\
-	R -e "Sweave('sigmagraph.Rnw');tools::texi2pdf('sigmagraph.tex')"
+	R -e "rmarkdown::render('sigmagraph.Rmd')"
+	#R -e "Sweave('sigmagraph.Rnw');tools::texi2pdf('sigmagraph.tex')"
 
 clean:
 	$(RM) doc.pdf

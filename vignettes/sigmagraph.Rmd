@@ -1,0 +1,78 @@
+---
+title: "Sigmagraph: network visualization using Sigma.js v2.4.0"
+author: "Thomas Charlon"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Sigmagraph enables to visualize networks using the latest stable version of Sigma.js. Graphs are created using the igraph package.
+
+## Visualization overview
+
+This package uses ggplot-like grammar: a basic visualization is first created and then modified by adding/removing attributes with additional functions, using the pipe operator from the magrittr package.  
+
+The basic visualization is created with the sigma_from_igraph function, then various functions are called to control the aesthetics of the visualization, which all take a sigmagraph object as the first argument.
+
+## Example
+
+The dataset "Les Miserables" is included as a classic R graph example, which shows the co-appearances of the characters in the novel "Les Miserables".
+
+```{r}
+devtools::load_all()
+library(sigmagraph)
+library(igraph)
+
+data(lesMis)
+class(lesMis)
+names(vertex_attr(lesMis))
+names(edge_attr(lesMis))
+```
+
+Each node has an ID and a label, and each edge has a value equal to the number of co-appearances two characters had.  
+To create a basic sigmagraph object, we call sigma_from_igraph:
+
+```{r}
+sig <- sigma_from_igraph(lesMis)
+sig
+```
+
+We can resize the nodes using a fixed value:
+
+```{r}
+sig %>% add_node_size(one_size = 7)
+```
+
+Or using a node attribute:
+
+```{r}
+df_nodes = cbind.data.frame(name = vertex_attr(lesMis, 'id'),
+  degree = degree(lesMis))
+
+# seems sigma.js is not scaling automatically with min_size and max_size
+# do it manually for now
+df_nodes$degree %<>% scale(center = FALSE) %>% `*`(3) %>% `+`(3)
+
+igraph = add_igraph_info(lesMis, df_nodes)
+
+sig <- sigma_from_igraph(lesMis) %>%
+ add_node_size(size_vector = vertex_attr(igraph, 'degree'), min_size = 3, max_size = 8)
+sig
+```
+
+We can use the label attribute to change the node names displayed:
+
+```{r}
+sig %>%
+  add_node_labels(label_attr = 'label')
+```

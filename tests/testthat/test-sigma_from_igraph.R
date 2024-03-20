@@ -1,44 +1,29 @@
 
+test_graph_to_json = function() {
+  nodes = data.frame(key = c('1', '2'), x = 3:4, y = 5:6, size = 7:8)
+  nodes %<>% graph_to_json
+  expected = list(list(key = '1', attributes = list(x = 3, y = 5, size = 7)),
+                  list(key = '2', attributes = list(x = 4, y = 6, size = 8)))
+  expect_identical(nodes, expected)
+
+  nodes = data.frame(key = c('1', '2'), x = 3:4, y = 5:6, size = 7:8)
+  nodes %<>% graph_to_json
+  expected = list(list(key = '1', attributes = list(x = 3, y = 5, size = 7)),
+                  list(key = '2', attributes = list(x = 4, y = 6, size = 8)))
+  expect_identical(nodes, expected)
+
+  edges = data.frame(key = c('1', '20'), source = 3:4, target = 5:6, size = 7:8)
+  edges %<>% graph_to_json('edges')
+  expected = list(list(key = '1', source = '3', target = '5',
+                       attributes = list(size = 7)),
+                  list(key = '20', source = '4', target = '6',
+                       attributes = list(size = 8)))
+  expect_identical(edges, expected)
+
+}
+test_that('graph_to_json', test_graph_to_json())
+
 test_sigma_from_igraph = function() {
 
-  # test writing
-  ## this is what we want
-  nodes = list(list(key = 1, attributes = list(size = 2)),
-               list(key = 2, attributes = list(size = 3)))
-  jsonlite::toJSON(nodes, pretty = TRUE, auto_unbox = TRUE)
-
-  ## this is now superseded by nodes_to_json
-  nodes = head(iris, 20)
-  nodes$key = seq_len(nrow(nodes))
-  nodes = lapply(as.data.frame(trimws(t(nodes))), function(vec) {
-      setNames(vec, names(nodes)) %>%
-          { list(key = .[['key']], attributes = as.list(.[names(iris)])) }
-    })
-  names(nodes) = NULL
-  nodes = lapply(nodes, function(node) {
-      node$attributes[1:4] %<>% lapply(as.numeric)
-      node
-    })
-
-  graphOut <- list(nodes)
-  names(graphOut) <- c('nodes')
-  out <- jsonlite::toJSON(graphOut, pretty = TRUE, auto_unbox = TRUE)
-  ## need to keep unbox
-
-  testthat::expect_true(TRUE)
-
-
-
-
-  # test reading
-  ## when importing, a strange data frame object, consisting of two data frames
-  ## but works well
-  nodes <- jsonlite::fromJSON(out)$nodes
-  nodes = list(list(key = 1, attributes = list(x = 1, y = 1, size = 2)),
-               list(key = 2, attributes = list(x = 2, y = 2, size = 3)))
-  out = jsonlite::toJSON(nodes, pretty = TRUE, auto_unbox = TRUE)
-  nodes <- jsonlite::fromJSON(out)
-
-  testthat::expect_true(TRUE)
 }
 test_that('sigma_from_igraph', test_sigma_from_igraph())

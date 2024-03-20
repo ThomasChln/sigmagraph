@@ -9,8 +9,7 @@ add_node_size(
   min_size = 1,
   max_size = 3,
   one_size = NULL,
-  size_vector = NULL,
-  size_metric = c("degree", "closeness", "betweenness", "pageRank", "eigenCentrality")
+  size_vector = NULL
 )
 }
 \arguments{
@@ -39,7 +38,6 @@ metric to use to scale the nodes.
 \examples{
 library(igraph)
 library(sigmagraph)
-library(magrittr)
 
 data(lesMis)
 
@@ -48,11 +46,6 @@ layout <- layout_nicely(lesMis)
 # one size for all nodes
 sig <- sigma_from_igraph(graph = lesMis, layout = layout) \%>\%
   add_node_size(oneSize = 3)
-sig
-
-# using a size attribute
-sig <- sigma_from_igraph(graph = lesMis, layout = layout) \%>\%
-  add_node_size(size_metric = 'degree', min_size = 2, max_size = 8)
 sig
 
 # using a vector

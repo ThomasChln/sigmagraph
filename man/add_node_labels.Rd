@@ -21,12 +21,10 @@ attribute from the initial igraph to use as the labels.
 \examples{
 library(igraph)
 library(sigmagraph)
-library(magrittr)
 
 data(lesMis)
 
-layout <- layout_nicely(lesMis)
-sig <- sigma_from_igraph(graph = lesMis, layout = layout) \%>\%
+sig <- sigma_from_igraph(graph = lesMis) \%>\%
   add_node_labels(label_attr = 'label')
 sig
 

@@ -32,13 +32,9 @@ Htmlwidget object, meant to be called directly to render a default
 Basic sigma.js visualization of an igraph object, with pipeable syntax.
 }
 \examples{
-library(igraph)
 library(sigmagraph)
-
 data(lesMis)
 
-l <- layout_nicely(lesMis)
-sig <- sigma_from_igraph(graph = lesMis, layout = l)
-
+sig <- sigma_from_igraph(graph = upgrade_graph(lesMis))
 sig
 }
