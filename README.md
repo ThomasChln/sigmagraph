@@ -22,40 +22,37 @@ Build a sigmagraph object from an igraph object
  
   data(lesMis)
  
-  layout <- layout_nicely(lesMis)
-  sig <- sigma_from_igraph(graph = lesMis, layout = layout)
- 
+  sig <- sigma_from_igraph(lesMis)
   sig
 ```
 
 Modify the node size of a sigmagraph object.
 
 ```r
-  library(magrittr)
  
   # one size for all nodes
-  sig <- sigma_from_igraph(graph = lesMis, layout = layout) %>%
-    add_node_size(oneSize = 3)
-  sig
- 
-  # using a size attribute
-  sig <- sigma_from_igraph(graph = lesMis, layout = layout) %>%
-    add_node_size(size_metric = 'degree', min_size = 2, max_size = 8)
-  sig
+  sig %>% add_node_size(one_size = 7)
  
   # using a vector
-  custom_size <- log10(degree(lesMis))
-  sig <- sigma_from_igraph(graph = lesMis, layout = layout) %>%
-   add_node_size(sizeVector = custom_size)
+  df_nodes = cbind.data.frame(name = vertex_attr(lesMis, 'id'),
+    degree = degree(lesMis))
+
+  # seems sigma.js is not scaling automatically with min_size and max_size
+  # do it manually for now
+  df_nodes$degree %<>% scale(center = FALSE) %>% `*`(3) %>% `+`(3)
+
+  igraph = add_igraph_info(lesMis, df_nodes)
+
+  sig <- sigma_from_igraph(lesMis) %>%
+   add_node_size(size_vector = vertex_attr(igraph, 'degree'), min_size = 3, max_size = 8)
   sig
 ```
 
 Modify the node labels of a sigmagraph object.
 
 ```r
-  sig <- sigma_from_igraph(graph = lesMis, layout = layout) %>%
+  sig %>%
     add_node_labels(label_attr = 'label')
-  sig
 ```
 
 Use in Shiny and Flexdashboard (see examples in shiny-server folder)

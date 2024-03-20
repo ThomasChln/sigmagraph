@@ -26,7 +26,7 @@ add_igraph_info = function(igraph, df_nodes, fields = names(df_nodes)) {
 
   #df_igraph = cbind.data.frame(name = names(igraph::V(igraph)),
   #  degree = igraph::centralization.degree(igraph)$res)
-  df_igraph = data.frame(name = vertex_attr(igraph, 'id'))
+  df_igraph = data.frame(name = vertex_attr(igraph)[[1]])
 
   df_igraph %<>% merge(df_nodes[fields], by.x = 'name', by.y = fields[1],
       all.x = TRUE, all.y = FALSE, sort = FALSE)
@@ -67,7 +67,7 @@ sigma_nodes_colors = function(sigmaObj, attr_name = NULL, color_map = NULL,
   sigmaObj
 }
                                                                                                                                     
-sigma_mutuals = function(igraph, color_map = NULL, point_size = 4, niter = 5e3,
+sigma_mutuals = function(igraph, color_map = NULL, niter = 5e3,
                          label = 'word', clusters = TRUE, arrows = FALSE,
                          node_size = NULL) {
 

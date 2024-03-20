@@ -43,5 +43,5 @@ order_dataframe = function(df_x, cols = 1:2, relevant_pattern = NULL) {
 l_graph_to_igraph = function(l_graph) {
 
   igraph = igraph::graph_from_data_frame(l_graph$df_links)
-  igraph %<>% add_igraph_info(l_graph$df_nodes, names(l_graph$df_nodes))
+  igraph %<>% add_igraph_info(l_graph$df_nodes)
 }

@@ -1,4 +1,5 @@
-library(sigmagraph)
+devtools::load_all()
+#library(sigmagraph)
 
 
 shiny_map_server = function(input, output, session) {

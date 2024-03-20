@@ -8,7 +8,8 @@ runtime: shiny
 ---
 
 ```{r}
-library(sigmagraph)
+devtools::load_all()
+#library(sigmagraph)
 
 dirpath = system.file('data', package = 'sigmagraph')
 kgraph = get(load(file.path(dirpath, 'epmc_1700_cuis_kg.rds')))
@@ -25,5 +26,5 @@ output$kg = renderSigmagraph(sgraph)
 ###
 
 ```{r}
-  sigmaNet::sigmaNetOutput('kg', height = '100%')
+  sigmagraphOutput('kg', height = '100%')
 ```
