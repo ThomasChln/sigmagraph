@@ -7,8 +7,7 @@ run apt-get update && \
   libxml2-dev libglpk-dev
 
 run R -e "install.packages(c('flexdashboard', 'igraph', 'jsonlite', 'RColorBrewer'))"
+run R -e "install.packages('cowplot')"
 
-add ./DESCRIPTION /sigmagraph/DESCRIPTION
-run R -e "devtools::install_deps('sigmagraph', dependencies = TRUE)"
 add ./ /sigmagraph
 run R -e "devtools::install('sigmagraph', dependencies = TRUE)"

@@ -5,7 +5,7 @@
 #'
 #' @param igraph   Igraph object to modify
 #' @param df_nodes Data frame to add to nodes
-#' @fields fileds  Columns of df_nodes to add. First must be the node identifier.
+#' @param fields   Columns of df_nodes to add. First must be the node identifier.
 #'
 #' @return A sigmagraph object with modified node labels
 #'
@@ -69,11 +69,11 @@ sigma_nodes_colors = function(sigmaObj, attr_name = NULL, color_map = NULL,
                                                                                                                                     
 sigma_mutuals = function(igraph, color_map = NULL, niter = 5e3,
                          label = 'name', clusters = TRUE, arrows = FALSE,
-                         node_size = NULL) {
+                         node_size = NULL, ...) {
 
   set.seed(0)                                                                   
   sigma_graph = igraph %>%          
-    sigma_from_igraph(layout = igraph::layout_with_fr(., niter = niter))
+    sigma_from_igraph(layout = igraph::layout_with_fr(., niter = niter), ...)
 
   if (clusters == TRUE) sigma_graph %<>% sigma_nodes_colors('clusters', color_map)
 

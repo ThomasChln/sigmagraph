@@ -76,3 +76,17 @@ We can use the label attribute to change the node names displayed:
 sig %>%
   add_node_labels(label_attr = 'label')
 ```
+
+We can use add_edge_size function to change edge sizes:
+
+```{r}
+sig %>%
+  add_edge_size(one_size = 5)
+```
+
+And add_edge_color function to change edge colors:
+
+```{r}
+sig %>%
+  add_edge_color(one_color = "#ccc")
+```

@@ -10,6 +10,8 @@ add_igraph_info(igraph, df_nodes, fields = names(df_nodes))
 \item{igraph}{Igraph object to modify}
 
 \item{df_nodes}{Data frame to add to nodes}
+
+\item{fields}{Columns of df_nodes to add. First must be the node identifier.}
 }
 \value{
 A sigmagraph object with modified node labels
@@ -23,11 +25,11 @@ library(sigmagraph)
 data(lesMis)
 
 df_nodes = cbind.data.frame(name = names(igraph::V(lesMis)),
-  log10_degree = log10(igraph::centralization.degree(lesMis)$res))
+  log10_degree = degree(lesMis)$res))
 
 igraph = add_igraph_info(lesMis, df_nodes)
 
-sig <- sigma_from_igraph(graph = lesMis, layout = layout) \%>\%
+sig <- sigma_from_igraph(lesMis) \%>\%
   add_node_size(size_vector = 'log10_degree')
 
 }

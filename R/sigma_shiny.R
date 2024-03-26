@@ -26,11 +26,12 @@ renderSigmagraph <- function(expr, env = parent.frame(), quoted = FALSE) {
 #'
 #' Basic sigma.js visualization of an igraph object, with pipeable syntax.
 #'
-#' @param graph     Igraph object
-#' @param layout    Output of an igraph layout function (default: layout_nicely)
-#' @param width     Width of the output graph (default: fit container)
-#' @param height    Height of the output graph (default: fit container)
-#' @param elementId Do not specify, used by the htmlwidgets package
+#' @param graph       Igraph object
+#' @param layout      Output of an igraph layout (default: layout_nicely)
+#' @param label_color Hex color for labels
+#' @param width       Width of the output graph (default: fit container)
+#' @param height      Height of the output graph (default: fit container)
+#' @param elementId   Do not specify, used by the htmlwidgets package
 #'
 #' @return Htmlwidget object, meant to be called directly to render a default
 #'   visualization, or passed to other functions to change attributes
@@ -43,8 +44,8 @@ renderSigmagraph <- function(expr, env = parent.frame(), quoted = FALSE) {
 #' sig <- sigma_from_igraph(graph = upgrade_graph(lesMis))
 #' sig
 #' @export
-sigma_from_igraph <- function(graph, layout = NULL, width = NULL,
-                              height = NULL, elementId = NULL) {
+sigma_from_igraph <- function(graph, layout = NULL, label_color = '#fff',
+                              width = NULL, height = NULL, elementId = NULL) {
 
   directed_flag <- igraph::is.directed(graph)
   graph_parse <- igraph::as_data_frame(graph, what = 'both')
@@ -79,11 +80,11 @@ sigma_from_igraph <- function(graph, layout = NULL, width = NULL,
 
   graphOut <- list(nodes = nodes, edges = edges, directed = directed_flag)
 
-  options <- list(minNodeSize = 1, maxNodeSize = 3, minEdgeSize = 3,
-                  maxEdgeSize = 1, neighborEvent = 'onClick',
+  options <- list(minNodeSize = 1, maxNodeSize = 3, minEdgeSize = 1,
+                  maxEdgeSize = 3, neighborEvent = 'onClick',
                   neighborStart = 'clickNode', neighborEnd = 'clickStage',
                   doubleClickZoom = TRUE, mouseWheelZoom = TRUE,
-                  edgeArrows = 'def')
+                  edgeArrows = 'def', labelColor = label_color)
 
   out <- jsonlite::toJSON(graphOut, pretty = TRUE, auto_unbox = TRUE)
   x <- list(data = out, options = options, graph = graph_parse)

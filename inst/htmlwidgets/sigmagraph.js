@@ -46,7 +46,7 @@ customDrawHover = function (
     context.shadowOffsetX = 0;
     context.shadowOffsetY = 0;
     context.shadowBlur = 6;
-    //context.shadowColor = "pink"; // Whatever you wish
+    context.shadowColor = "black"; // Whatever you wish
   
     const PADDING = 3;
   
@@ -73,6 +73,7 @@ customDrawHover = function (
         boxWidth = context.measureText(lines[i]).width
       }
   }
+        boxWidth = Math.round(boxWidth + 5);
 
   
       context.beginPath();
@@ -121,14 +122,18 @@ HTMLWidgets.widget({
           graph = new graphology.Graph();
           //graph.import(x.data);
           s = new Sigma(graph, sigmaID, {
-              labelColor: { color: "#888888" }, 
+         //     labelColor: { color: x.options.labelColor }, 
               hoverRenderer: customDrawHover,
               labelRenderer: customDrawLabel,
+    //          edgeReducer: (edge, data) => {
+  //return {...data, size:5 }
+//},
               zIndex: true
             });
           s.refresh();
         }
 
+        //s.setSetting('labelColor', x.options.labelColor);
         s.setSetting('minEdgeSize', x.options.minEdgeSize);
         s.setSetting('maxEdgeSize', x.options.maxEdgeSize);
         s.setSetting('minNodeSize', x.options.minNodeSize);

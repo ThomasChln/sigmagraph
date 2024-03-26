@@ -12,7 +12,7 @@ add_node_labels(sigma_obj, label_attr = NULL)
 \item{label_attr}{Attribute to use to replace node labels}
 }
 \value{
-A sigmagraph object with modified node labels
+Sigmagraph object with modified node labels
 }
 \description{
 Modify the node labels of an existing sigmagraph object by providing an

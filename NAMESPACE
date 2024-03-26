@@ -3,6 +3,8 @@
 export("%$%")
 export("%<>%")
 export("%>%")
+export(add_edge_color)
+export(add_edge_size)
 export(add_igraph_info)
 export(add_node_labels)
 export(add_node_size)

@@ -7,6 +7,7 @@
 sigma_from_igraph(
   graph,
   layout = NULL,
+  label_color = "#fff",
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -15,7 +16,9 @@ sigma_from_igraph(
 \arguments{
 \item{graph}{Igraph object}
 
-\item{layout}{Output of an igraph layout function (default: layout_nicely)}
+\item{layout}{Output of an igraph layout (default: layout_nicely)}
+
+\item{label_color}{Hex color for labels}
 
 \item{width}{Width of the output graph (default: fit container)}
 

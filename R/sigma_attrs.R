@@ -69,9 +69,9 @@ add_node_size <- function(sigma_obj, min_size = 1, max_size = 3,
 #' attribute from the initial igraph to use as the labels.
 #'
 #' @param sigma_obj   Sigmagraph object, returned by sigma_from_igraph function
-#' @param label_attr Attribute to use to replace node labels
+#' @param label_attr  Attribute to use to replace node labels
 #'
-#' @return A sigmagraph object with modified node labels
+#' @return Sigmagraph object with modified node labels
 #'
 #' @examples
 #' library(igraph)
@@ -107,4 +107,77 @@ concat_labels = function(df_nodes, label_attr) {
   apply(df_nodes, 1, function(row) {
       paste0(names(label_attr), row[label_attr], collapse = '\n')
     })
+}
+
+#' Modify the edge size of a sigmagraph object.
+#'
+#' Modify the edge size of a sigmagraph by providing a single size
+#'
+#' @param sigma_obj Sigmagraph object
+#' @param one_size  A single size to use for all edges
+#'
+#' @return Sigmagraph with modified edge sizes
+#'
+#' @examples
+#' library(igraph)
+#' library(sigmagraph)
+#'
+#' data(lesMis)
+#'
+#' sig <- sigma_from_igraph(graph = lesMis) %>%
+#'   add_edge_size(one_size = 0.1)
+#' sig
+#'
+#' @export
+add_edge_size <- function(sigma_obj, one_size = NULL) {
+
+  json_obj = jsonlite::fromJSON(sigma_obj$x$data)
+  edges <- json_obj$edges
+  nodes <- json_obj$nodes
+  directed <- json_obj$directed
+
+  if (one_size == 0) edges$attributes$hidden = TRUE
+  edges$attributes$size <- one_size
+  sigma_obj$x$options$minEdgeSize <- one_size
+  sigma_obj$x$options$maxEdgeSize <- one_size
+
+  graph <- list(nodes = nodes, edges = edges, directed = directed)
+  sigma_obj$x$data <- jsonlite::toJSON(graph, auto_unbox = TRUE)
+
+  sigma_obj
+}
+
+#' Modify the edge colors of a sigmagraph object.
+#'
+#' Modify the edge colors of a sigmagraph object by providing a single color.
+#'
+#' @param sigma_obj Sigmagraph object
+#' @param one_color A single color to color all of the nodes (hex format)
+#'
+#' @return Sigmagraph with modified edge colors
+#'
+#' @examples
+#' library(igraph)
+#' library(sigmagraph)
+#'
+#' data(lesMis)
+#'
+#' sig <- sigma_from_igraph(graph = lesMis) %>%
+#'   add_edge_color(one_color = "#ccc")
+#' sig
+#'
+#' @export
+add_edge_color <- function(sigma_obj, one_color = NULL) {
+
+  json_obj = jsonlite::fromJSON(sigma_obj$x$data)
+  edges <- json_obj$edges
+  nodes <- json_obj$nodes
+  directed <- json_obj$directed
+
+  edges$attributes$color <- one_color
+
+  graph <- list(nodes = nodes, edges = edges, directed = directed)
+  sigma_obj$x$data <- jsonlite::toJSON(graph, auto_unbox = TRUE)
+
+  sigma_obj
 }
