@@ -1,5 +1,5 @@
 
-kgraph_to_igraph = function(l_fit_embeds) {
+kgraph_to_lgraph = function(l_fit_embeds) {
 
   df_projs = l_fit_embeds$df_projs
 
@@ -10,7 +10,7 @@ kgraph_to_igraph = function(l_fit_embeds) {
   df_nodes$clusters = grepl('[)]$', df_nodes$name)
 
   igraph = setNames(df_projs, c(1:2, 'weight')) %>%
-      list(df_links = ., df_nodes = df_nodes) %>% l_graph_to_igraph
+      list(df_links = ., df_nodes = df_nodes)
 }
 
 

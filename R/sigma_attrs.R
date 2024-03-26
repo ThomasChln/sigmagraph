@@ -89,8 +89,11 @@ add_node_labels <- function(sigma_obj, label_attr = NULL) {
   json_obj = jsonlite::fromJSON(sigma_obj$x$data)
   nodes <- json_obj$nodes
 
-  nodes$attributes$label <- sigma_obj$x$graph$vertices[, label_attr] %>%
-      as.character
+  nodes$attributes$label <- if (length(label_attr) > 1) {
+    concat_labels(sigma_obj$x$graph$vertices, label_attr)
+  } else {
+    as.character(sigma_obj$x$graph$vertices[, label_attr])
+  }
 
   sgraph <- list(nodes = nodes, edges = json_obj$edges,
                  directed = json_obj$directed)
@@ -100,3 +103,8 @@ add_node_labels <- function(sigma_obj, label_attr = NULL) {
 }
 
 
+concat_labels = function(df_nodes, label_attr) {
+  apply(df_nodes, 1, function(row) {
+      paste0(names(label_attr), row[label_attr], collapse = '\n')
+    })
+}

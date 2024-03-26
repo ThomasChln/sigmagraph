@@ -68,7 +68,7 @@ sigma_nodes_colors = function(sigmaObj, attr_name = NULL, color_map = NULL,
 }
                                                                                                                                     
 sigma_mutuals = function(igraph, color_map = NULL, niter = 5e3,
-                         label = 'word', clusters = TRUE, arrows = FALSE,
+                         label = 'name', clusters = TRUE, arrows = FALSE,
                          node_size = NULL) {
 
   set.seed(0)                                                                   
@@ -77,7 +77,9 @@ sigma_mutuals = function(igraph, color_map = NULL, niter = 5e3,
 
   if (clusters == TRUE) sigma_graph %<>% sigma_nodes_colors('clusters', color_map)
 
-  if (label != 'word') sigma_graph %<>% add_node_labels(label)
+  if (length(label) > 1 || label != 'name') {
+      sigma_graph %<>% add_node_labels(label)
+  }
 
   if (!is.null(node_size)) {
       if (is.numeric(node_size)) {
