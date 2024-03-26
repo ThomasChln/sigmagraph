@@ -64,11 +64,6 @@ integrate a vignette, tests and additional functionalities as sigmaNet-like
 modifiers and new sigma.js features (especially reducers and clusters).
 Hit the star button if you'd like to see it on CRAN as soon as possible !
 
-## Acknowledgements
-
-Development funded by [PARSE Health](https://parse-health.org/) and led by Prof. Cai.
-Code heavily inspired by sigmaNet package.
-
 ## License
 
 This package is free and open source software, licensed under GPL-3.
