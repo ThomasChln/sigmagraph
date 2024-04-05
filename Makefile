@@ -36,12 +36,9 @@ devtools_check:
 vignette:
 	cd vignettes;\
 	R -e "rmarkdown::render('sigmagraph.Rmd')"
-	#R -e "Sweave('sigmagraph.Rnw');tools::texi2pdf('sigmagraph.tex')"
 
 clean:
 	$(RM) doc.pdf
-	cd vignettes;\
-	$(RM) *.pdf *.aux *.bbl *.blg *.out *.tex *.log
 
 download_js:
 	wget https://cdn.bootcdn.net/ajax/libs/sigma.js/2.4.0/sigma.min.js

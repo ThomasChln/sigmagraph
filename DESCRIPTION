@@ -1,7 +1,11 @@
 Package: sigmagraph
 Title: Sigma.js network visualization v2.4.0
 Version: 0.1.0
-Authors@R: person("Thomas", "Charlon", role = c("aut", "cre"), email = "charlon@protonmail.com", comment = c(ORCID = "0000-0001-7497-0470"))
+Authors@R: c(person("Thomas", "Charlon", role = c("aut", "cre"),
+                    email = "charlon@protonmail.com",
+                    comment = c(ORCID = "0000-0001-7497-0470")),
+             person("CELEHS", role = "aut", comment = "<https://celehs.hms.harvard.edu>"),
+             person("PARSE Health", role = "aut", comment = "<https://parse-health.org>"))
 Description: Htmlwidget wrapper for the sigma.js network visualization v2.4.0, inspired by the sigmaNet package.
 Imports:
     htmlwidgets,
