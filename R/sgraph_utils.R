@@ -69,11 +69,12 @@ sigma_nodes_colors = function(sigmaObj, attr_name = NULL, color_map = NULL,
                                                                                                                                     
 sigma_mutuals = function(igraph, color_map = NULL, niter = 5e3,
                          label = 'name', clusters = TRUE, arrows = FALSE,
-                         node_size = NULL, ...) {
+                         node_size = NULL,
+                         layout = igraph::layout_with_fr(igraph, niter = niter),
+                         ...) {
 
   set.seed(0)                                                                   
-  sigma_graph = igraph %>%          
-    sigma_from_igraph(layout = igraph::layout_with_fr(., niter = niter), ...)
+  sigma_graph = sigma_from_igraph(igraph, layout = layout, ...)
 
   if (clusters == TRUE) sigma_graph %<>% sigma_nodes_colors('clusters', color_map)
 
