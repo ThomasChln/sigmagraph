@@ -147,9 +147,45 @@ add_edge_size <- function(sigma_obj, one_size = NULL) {
   sigma_obj
 }
 
+#' Modify the edge zIndex of a sigmagraph object.
+#'
+#' Modify the edge zIndex
+#'
+#' @param sigma_obj Sigmagraph object
+#' @param zindex    Zindex value, larger is drawn above.
+#'
+#' @return Sigmagraph
+#'
+#' @examples
+#' library(igraph)
+#' library(sigmagraph)
+#'
+#' data(lesMis)
+#'
+#' sig <- sigma_from_igraph(graph = lesMis) %>%
+#'   add_edge_zindex(zindex = 2)
+#' sig
+#'
+#' @export
+add_edge_zindex <- function(sigma_obj, zindex) {
+
+  json_obj = jsonlite::fromJSON(sigma_obj$x$data)
+  edges <- json_obj$edges
+  nodes <- json_obj$nodes
+  directed <- json_obj$directed
+
+  edges$attributes$zIndex <- zindex
+
+  graph <- list(nodes = nodes, edges = edges, directed = directed)
+  sigma_obj$x$data <- jsonlite::toJSON(graph, auto_unbox = TRUE)
+
+  sigma_obj
+}
+
 #' Modify the edge colors of a sigmagraph object.
 #'
 #' Modify the edge colors of a sigmagraph object by providing a single color.
+#' Also works with a vector of correct size.
 #'
 #' @param sigma_obj Sigmagraph object
 #' @param one_color A single color to color all of the nodes (hex format)
@@ -167,14 +203,29 @@ add_edge_size <- function(sigma_obj, one_size = NULL) {
 #' sig
 #'
 #' @export
-add_edge_color <- function(sigma_obj, one_color = NULL) {
+add_edge_color <- function(sigma_obj, one_color = NULL, color_attr = NULL,
+                           color_palette = 'Set2') {
 
   json_obj = jsonlite::fromJSON(sigma_obj$x$data)
   edges <- json_obj$edges
   nodes <- json_obj$nodes
   directed <- json_obj$directed
 
-  edges$attributes$color <- one_color
+  if (is.null(one_color)) {
+    temp_col <- edges[, color_attr]
+    uniq_cols = unique(temp_col)
+    n_uniq_cols = length(uniq_cols)
+
+    # If there are more edge colors than colors in the chosen palette, interpolate colors to expand the palette
+    pal <- tryCatch(RColorBrewer::brewer.pal(n_uniq_cols, color_palette),
+      warning = function(w) (grDevices::colorRampPalette(RColorBrewer::brewer.pal(8, color_palette))(n_uniq_cols)))
+
+    df_palette <- data.frame(group = uniq_cols, color = head(pal, n_uniq_cols))
+    edges$attributes$color <- df_palette$color[match(temp_col, df_palette$group)]
+  } else {
+    edges$attributes$color <- one_color
+  }
+
 
   graph <- list(nodes = nodes, edges = edges, directed = directed)
   sigma_obj$x$data <- jsonlite::toJSON(graph, auto_unbox = TRUE)
