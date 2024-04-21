@@ -41,12 +41,11 @@ customDrawHover = function (
   
     context.font = `${weight} ${size}px ${font}`;
   
-    // Then we draw the label background
-    context.fillStyle = "white"; // YOUR FAVORITE COLOR HERE FOR THE LABEL CONTAINER ;)
+    context.fillStyle = "white";
     context.shadowOffsetX = 0;
     context.shadowOffsetY = 0;
     context.shadowBlur = 6;
-    context.shadowColor = "black"; // Whatever you wish
+    context.shadowColor = "black";
   
     const PADDING = 3;
   
@@ -139,8 +138,8 @@ HTMLWidgets.widget({
         s.setSetting('maxEdgeSize', x.options.max_edge_size);
         s.setSetting('minNodeSize', x.options.min_node_size);
         s.setSetting('maxNodeSize', x.options.max_node_size);
-        s.setSetting('doubleClickEnabled', x.options.double_click_zoom);
-        s.setSetting('mouseWheelEnabled', x.options.mouse_wheel_zoom);
+        s.setSetting('doubleClickEnabled', x.options.doubleClickZoom);
+        s.setSetting('mouseWheelEnabled', x.options.mouseWheelZoom);
         s.graph.import(x.data);
 
 
@@ -153,7 +152,7 @@ HTMLWidgets.widget({
         //  s.setNodeattribute(d.data.node, 'word', 'label')
         //})
 
-        if (x.options.neighbor_event != 'None') {
+        if (x.options.neighborEvent != 'None') {
           s.graph.nodes().forEach(function(n) {
             s.graph.setNodeAttribute(n, 'original_color', s.graph.getNodeAttribute(n, 'color'));
             s.graph.setNodeAttribute(n, 'original_hidden', s.graph.getNodeAttribute(n, 'hidden'));
@@ -162,7 +161,7 @@ HTMLWidgets.widget({
             s.graph.setEdgeAttribute(e, 'original_color', s.graph.getEdgeAttribute(e, 'color'));
             //e.type = x.options.edgeArrows;
           });
-          s.on(x.options.neighbor_start, function(e) {
+          s.on(x.options.neighborStart, function(e) {
             var nodeId = e.node,
                 toKeep = s.graph.neighbors(nodeId);
             toKeep.push(e.node);
@@ -182,7 +181,7 @@ HTMLWidgets.widget({
             });
             s.refresh();
           });
-          s.on(x.options.neighbor_end, function(e) {
+          s.on(x.options.neighborEnd, function(e) {
             s.graph.nodes().forEach(function(n) {
                 s.graph.setNodeAttribute(n, 'color', s.graph.getNodeAttribute(n, 'original_color'));
                 s.graph.setNodeAttribute(n, 'hidden', s.graph.getNodeAttribute(n, 'original_hidden'));
@@ -195,14 +194,14 @@ HTMLWidgets.widget({
 
           if (HTMLWidgets.shinyMode) {
             if (x.options.sigmaEvents) {
-              if (x.options.sigmaEvents == 'click_node') {
-                s.on("click_node", function(d) {
-                  Shiny.onInputChange('node_data', d.data.node)
+              if (x.options.sigmaEvents == 'clickNode') {
+                s.on("clickNode", function(d) {
+                  Shiny.onInputChange('nodeData', d.data.node)
                 })
               }
-              if (x.options.sigmaEvents == 'hover_node') {
-                s.on("over_node", function(d) {
-                  Shiny.onInputChange('node_data', d.data.node)
+              if (x.options.sigmaEvents == 'hoverNode') {
+                s.on("overNode", function(d) {
+                  Shiny.onInputChange('nodeData', d.data.node)
                 })
               }
             }

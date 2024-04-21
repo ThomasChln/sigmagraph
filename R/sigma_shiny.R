@@ -81,9 +81,9 @@ sigma_from_igraph <- function(graph, layout = NULL, label_color = '#fff',
   graph_out <- list(nodes = nodes, edges = edges, directed = directed_flag)
 
   sigma_opts <- list(min_node_size = 1, max_node_size = 3, min_edge_size = 1,
-                  max_edge_size = 3, neighbor_event = 'on_click',
-                  neighbor_start = 'click_node', neighbor_end = 'click_stage',
-                  double_click_zoom = TRUE, mouse_wheel_zoom = TRUE,
+                  max_edge_size = 3, neighborEvent = 'onClick',
+                  neighborStart = 'clickNode', neighborEnd = 'clickStage',
+                  doubleClickZoom = TRUE, mouseWheelZoom = TRUE,
                   edge_arrows = 'def', label_color = label_color, label_grid_cell_size = label_grid_cell_size)
 
   graph_json <- jsonlite::toJSON(graph_out, auto_unbox = TRUE)
