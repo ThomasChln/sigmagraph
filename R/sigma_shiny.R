@@ -45,7 +45,7 @@ renderSigmagraph <- function(expr, env = parent.frame(), quoted = FALSE) {
 #' sig
 #' @export
 sigma_from_igraph <- function(graph, layout = NULL, label_color = '#fff',
-                              width = NULL, height = NULL, elementId = NULL) {
+                              width = NULL, height = NULL, elementId = NULL, label_grid_cell_size = 200) {
 
   directed_flag <- igraph::is.directed(graph)
   graph_parse <- igraph::as_data_frame(graph, what = 'both')
@@ -78,18 +78,18 @@ sigma_from_igraph <- function(graph, layout = NULL, label_color = '#fff',
   nodes %<>% graph_to_json 
   edges %<>% graph_to_json('edges')
 
-  graphOut <- list(nodes = nodes, edges = edges, directed = directed_flag)
+  graph_out <- list(nodes = nodes, edges = edges, directed = directed_flag)
 
-  options <- list(minNodeSize = 1, maxNodeSize = 3, minEdgeSize = 1,
-                  maxEdgeSize = 3, neighborEvent = 'onClick',
-                  neighborStart = 'clickNode', neighborEnd = 'clickStage',
-                  doubleClickZoom = TRUE, mouseWheelZoom = TRUE,
-                  edgeArrows = 'def', labelColor = label_color)
+  sigma_opts <- list(min_node_size = 1, max_node_size = 3, min_edge_size = 1,
+                  max_edge_size = 3, neighbor_event = 'on_click',
+                  neighbor_start = 'click_node', neighbor_end = 'click_stage',
+                  double_click_zoom = TRUE, mouse_wheel_zoom = TRUE,
+                  edge_arrows = 'def', label_color = label_color, label_grid_cell_size = label_grid_cell_size)
 
-  out <- jsonlite::toJSON(graphOut, pretty = TRUE, auto_unbox = TRUE)
-  x <- list(data = out, options = options, graph = graph_parse)
+  graph_json <- jsonlite::toJSON(graph_out, auto_unbox = TRUE)
+  sigma_obj <- list(data = graph_json, options = sigma_opts, graph = graph_parse)
 
-  createWidget(name = 'sigmagraph', x, width = width, height = height,
+  createWidget(name = 'sigmagraph', sigma_obj, width = width, height = height,
                package = 'sigmagraph', elementId = elementId)
 }
 

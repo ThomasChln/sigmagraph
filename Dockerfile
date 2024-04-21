@@ -1,10 +1,10 @@
 
-from rocker/shiny-verse:4.3.2
+from rocker/shiny-verse:4.3.3
 run apt-get update && \
   # for vignette
-  apt-get install -y --no-install-recommends texlive texlive-latex-recommended texlive-fonts-extra qpdf \
+  #apt-get install -y --no-install-recommends texlive texlive-latex-recommended texlive-fonts-extra qpdf \
   # for igraph
-  libxml2-dev libglpk-dev
+  apt-get install -y libxml2-dev libglpk-dev
 
 run R -e "install.packages(c('flexdashboard', 'igraph', 'jsonlite', 'RColorBrewer'))"
 run R -e "install.packages('cowplot')"

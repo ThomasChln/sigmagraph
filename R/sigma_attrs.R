@@ -39,9 +39,7 @@ add_node_size <- function(sigma_obj, min_size = 1, max_size = 3,
   one_size = NULL, size_vector = NULL) {
 
   json_obj = jsonlite::fromJSON(sigma_obj$x$data)
-  edges <- json_obj$edges
   nodes <- json_obj$nodes
-  directed <- json_obj$directed
   
   if (!is.null(one_size)) {
 
@@ -57,10 +55,7 @@ add_node_size <- function(sigma_obj, min_size = 1, max_size = 3,
 
   }
 
-  sgraph <- list(nodes = nodes, edges = edges, directed = directed)
-  sigma_obj$x$data <- jsonlite::toJSON(sgraph, auto_unbox = TRUE)
-
-  sigma_obj
+  update_sigma_json(sigma_obj, nodes, json_obj$edges, json_obj$directed)
 }
 
 #' Modify the node labels of a sigmagraph object.
@@ -95,11 +90,7 @@ add_node_labels <- function(sigma_obj, label_attr = NULL) {
     as.character(sigma_obj$x$graph$vertices[, label_attr])
   }
 
-  sgraph <- list(nodes = nodes, edges = json_obj$edges,
-                 directed = json_obj$directed)
-  sigma_obj$x$data <- jsonlite::toJSON(sgraph, auto_unbox = TRUE)
-
-  sigma_obj
+  update_sigma_json(sigma_obj, nodes, json_obj$edges, json_obj$directed)
 }
 
 
@@ -133,18 +124,13 @@ add_edge_size <- function(sigma_obj, one_size = NULL) {
 
   json_obj = jsonlite::fromJSON(sigma_obj$x$data)
   edges <- json_obj$edges
-  nodes <- json_obj$nodes
-  directed <- json_obj$directed
 
   if (one_size == 0) edges$attributes$hidden = TRUE
   edges$attributes$size <- one_size
   sigma_obj$x$options$minEdgeSize <- one_size
   sigma_obj$x$options$maxEdgeSize <- one_size
 
-  graph <- list(nodes = nodes, edges = edges, directed = directed)
-  sigma_obj$x$data <- jsonlite::toJSON(graph, auto_unbox = TRUE)
-
-  sigma_obj
+  update_sigma_json(sigma_obj, json_obj$nodes, edges, json_obj$directed)
 }
 
 #' Modify the edge zIndex of a sigmagraph object.
@@ -171,15 +157,10 @@ add_edge_zindex <- function(sigma_obj, zindex) {
 
   json_obj = jsonlite::fromJSON(sigma_obj$x$data)
   edges <- json_obj$edges
-  nodes <- json_obj$nodes
-  directed <- json_obj$directed
 
   edges$attributes$zIndex <- zindex
 
-  graph <- list(nodes = nodes, edges = edges, directed = directed)
-  sigma_obj$x$data <- jsonlite::toJSON(graph, auto_unbox = TRUE)
-
-  sigma_obj
+  update_sigma_json(sigma_obj, json_obj$nodes, edges, json_obj$directed)
 }
 
 #' Modify the edge colors of a sigmagraph object.
@@ -208,8 +189,6 @@ add_edge_color <- function(sigma_obj, one_color = NULL, color_attr = NULL,
 
   json_obj = jsonlite::fromJSON(sigma_obj$x$data)
   edges <- json_obj$edges
-  nodes <- json_obj$nodes
-  directed <- json_obj$directed
 
   if (is.null(one_color)) {
     temp_col <- edges[, color_attr]
@@ -226,9 +205,41 @@ add_edge_color <- function(sigma_obj, one_color = NULL, color_attr = NULL,
     edges$attributes$color <- one_color
   }
 
+  update_sigma_json(sigma_obj, json_obj$nodes, edges, json_obj$directed)
+}
+
+update_sigma_json = function(sigma_obj, nodes, edges, directed) {
 
   graph <- list(nodes = nodes, edges = edges, directed = directed)
   sigma_obj$x$data <- jsonlite::toJSON(graph, auto_unbox = TRUE)
 
   sigma_obj
 }
+
+multiline_labels = function(df_nodes, display_val_str = '\nP-value: ', replace_codes = TRUE) {
+
+  if (!replace_codes) {
+    df_nodes$label = df_nodes$desc %>%
+      { ifelse(df_nodes$word != ., paste0('Label: ', ., '\n'), '') }
+
+    df_nodes$label %<>% paste0('Group: ', df_nodes$clusters)
+
+  } else {
+    df_nodes$label = df_nodes$desc
+  }
+
+  val_labels = df_nodes$display_val %>%
+      { ifelse(!is.na(.), paste0(display_val_str, df_nodes$display_val), '') }
+
+  df_nodes$label %<>% paste0(val_labels)
+
+  df_nodes
+}
+
+add_node_hidden = function(sigma_obj, hidden) {
+  json_obj = jsonlite::fromJSON(sigma_obj$x$data)
+  nodes <- json_obj$nodes
+  nodes$attributes$hidden <- hidden
+  update_sigma_json(sigma_obj, nodes, json_obj$edges, json_obj$directed)
+}
+

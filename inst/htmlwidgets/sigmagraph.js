@@ -134,12 +134,13 @@ HTMLWidgets.widget({
         }
 
         //s.setSetting('labelColor', x.options.labelColor);
-        s.setSetting('minEdgeSize', x.options.minEdgeSize);
-        s.setSetting('maxEdgeSize', x.options.maxEdgeSize);
-        s.setSetting('minNodeSize', x.options.minNodeSize);
-        s.setSetting('maxNodeSize', x.options.maxNodeSize);
-        s.setSetting('doubleClickEnabled', x.options.doubleClickZoom);
-        s.setSetting('mouseWheelEnabled', x.options.mouseWheelZoom);
+        s.setSetting('labelGridCellSize', x.options.label_grid_cell_size);
+        s.setSetting('minEdgeSize', x.options.min_edge_size);
+        s.setSetting('maxEdgeSize', x.options.max_edge_size);
+        s.setSetting('minNodeSize', x.options.min_node_size);
+        s.setSetting('maxNodeSize', x.options.max_node_size);
+        s.setSetting('doubleClickEnabled', x.options.double_click_zoom);
+        s.setSetting('mouseWheelEnabled', x.options.mouse_wheel_zoom);
         s.graph.import(x.data);
 
 
@@ -152,22 +153,22 @@ HTMLWidgets.widget({
         //  s.setNodeattribute(d.data.node, 'word', 'label')
         //})
 
-        if (x.options.neighborEvent != 'None') {
+        if (x.options.neighbor_event != 'None') {
           s.graph.nodes().forEach(function(n) {
-            s.graph.setNodeAttribute(n, 'originalColor', s.graph.getNodeAttribute(n, 'color'));
-            s.graph.setNodeAttribute(n, 'originalHidden', s.graph.getNodeAttribute(n, 'hidden'));
+            s.graph.setNodeAttribute(n, 'original_color', s.graph.getNodeAttribute(n, 'color'));
+            s.graph.setNodeAttribute(n, 'original_hidden', s.graph.getNodeAttribute(n, 'hidden'));
           });
           s.graph.edges().forEach(function(e) {
-            s.graph.setEdgeAttribute(e, 'originalColor', s.graph.getEdgeAttribute(e, 'color'));
+            s.graph.setEdgeAttribute(e, 'original_color', s.graph.getEdgeAttribute(e, 'color'));
             //e.type = x.options.edgeArrows;
           });
-          s.on(x.options.neighborStart, function(e) {
+          s.on(x.options.neighbor_start, function(e) {
             var nodeId = e.node,
                 toKeep = s.graph.neighbors(nodeId);
             toKeep.push(e.node);
             s.graph.nodes().forEach(function(n) {
               if (toKeep.includes(n)) {
-                s.graph.setNodeAttribute(n, 'color', s.graph.getNodeAttribute(n, 'originalColor'));
+                s.graph.setNodeAttribute(n, 'color', s.graph.getNodeAttribute(n, 'original_color'));
                 s.graph.setNodeAttribute(n, 'hidden', false);
               } else {
                 s.graph.setNodeAttribute(n, 'color', '#eee');
@@ -175,32 +176,32 @@ HTMLWidgets.widget({
             });
             s.graph.edges().forEach(function(e) {
               if (toKeep.includes(s.graph.source(e)) && toKeep.includes(s.graph.target(e)))
-                s.graph.setEdgeAttribute(e, 'color', s.graph.getEdgeAttribute(e, 'originalColor'));
+                s.graph.setEdgeAttribute(e, 'color', s.graph.getEdgeAttribute(e, 'original_color'));
               else
                 s.graph.setEdgeAttribute(e, 'color', '#eee');
             });
             s.refresh();
           });
-          s.on(x.options.neighborEnd, function(e) {
+          s.on(x.options.neighbor_end, function(e) {
             s.graph.nodes().forEach(function(n) {
-                s.graph.setNodeAttribute(n, 'color', s.graph.getNodeAttribute(n, 'originalColor'));
-                s.graph.setNodeAttribute(n, 'hidden', s.graph.getNodeAttribute(n, 'originalHidden'));
+                s.graph.setNodeAttribute(n, 'color', s.graph.getNodeAttribute(n, 'original_color'));
+                s.graph.setNodeAttribute(n, 'hidden', s.graph.getNodeAttribute(n, 'original_hidden'));
             });
             s.graph.edges().forEach(function(e) {
-                s.graph.setEdgeAttribute(e, 'color', s.graph.getEdgeAttribute(e, 'originalColor'));
+                s.graph.setEdgeAttribute(e, 'color', s.graph.getEdgeAttribute(e, 'original_color'));
             });
             s.refresh();
           });
 
           if (HTMLWidgets.shinyMode) {
             if (x.options.sigmaEvents) {
-              if (x.options.sigmaEvents == 'clickNode') {
-                s.on("clickNode", function(d) {
+              if (x.options.sigmaEvents == 'click_node') {
+                s.on("click_node", function(d) {
                   Shiny.onInputChange('node_data', d.data.node)
                 })
               }
-              if (x.options.sigmaEvents == 'hoverNode') {
-                s.on("overNode", function(d) {
+              if (x.options.sigmaEvents == 'hover_node') {
+                s.on("over_node", function(d) {
                   Shiny.onInputChange('node_data', d.data.node)
                 })
               }
