@@ -152,9 +152,10 @@ HTMLWidgets.widget({
         //  s.setNodeattribute(d.data.node, 'word', 'label')
         //})
 
-        if (x.options.neighborEvent != 'None'){
+        if (x.options.neighborEvent != 'None') {
           s.graph.nodes().forEach(function(n) {
             s.graph.setNodeAttribute(n, 'originalColor', s.graph.getNodeAttribute(n, 'color'));
+            s.graph.setNodeAttribute(n, 'originalHidden', s.graph.getNodeAttribute(n, 'hidden'));
           });
           s.graph.edges().forEach(function(e) {
             s.graph.setEdgeAttribute(e, 'originalColor', s.graph.getEdgeAttribute(e, 'color'));
@@ -165,10 +166,12 @@ HTMLWidgets.widget({
                 toKeep = s.graph.neighbors(nodeId);
             toKeep.push(e.node);
             s.graph.nodes().forEach(function(n) {
-              if (toKeep.includes(n))
+              if (toKeep.includes(n)) {
                 s.graph.setNodeAttribute(n, 'color', s.graph.getNodeAttribute(n, 'originalColor'));
-              else
+                s.graph.setNodeAttribute(n, 'hidden', false);
+              } else {
                 s.graph.setNodeAttribute(n, 'color', '#eee');
+              }
             });
             s.graph.edges().forEach(function(e) {
               if (toKeep.includes(s.graph.source(e)) && toKeep.includes(s.graph.target(e)))
@@ -181,6 +184,7 @@ HTMLWidgets.widget({
           s.on(x.options.neighborEnd, function(e) {
             s.graph.nodes().forEach(function(n) {
                 s.graph.setNodeAttribute(n, 'color', s.graph.getNodeAttribute(n, 'originalColor'));
+                s.graph.setNodeAttribute(n, 'hidden', s.graph.getNodeAttribute(n, 'originalHidden'));
             });
             s.graph.edges().forEach(function(e) {
                 s.graph.setEdgeAttribute(e, 'color', s.graph.getEdgeAttribute(e, 'originalColor'));
@@ -188,15 +192,15 @@ HTMLWidgets.widget({
             s.refresh();
           });
 
-          if(HTMLWidgets.shinyMode){
-            if(x.options.sigmaEvents){
-              if(x.options.sigmaEvents == 'clickNode'){
-                s.on("clickNode", function(d){
+          if (HTMLWidgets.shinyMode) {
+            if (x.options.sigmaEvents) {
+              if (x.options.sigmaEvents == 'clickNode') {
+                s.on("clickNode", function(d) {
                   Shiny.onInputChange('node_data', d.data.node)
                 })
               }
-              if(x.options.sigmaEvents == 'hoverNode'){
-                s.on("overNode", function(d){
+              if (x.options.sigmaEvents == 'hoverNode') {
+                s.on("overNode", function(d) {
                   Shiny.onInputChange('node_data', d.data.node)
                 })
               }
