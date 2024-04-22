@@ -1,18 +1,22 @@
 
 customDrawLabel = function(
-  context, data, settings, singleLine
+  context, data, settings, singleLine, drawFrame
 ) {
   if (!data.label) return;
   if (singleLine === undefined) {
       singleLine = true;
   }
+  if (drawFrame === undefined) {
+      drawFrame = true;
+  }
 
   const size = settings.labelSize,
     font = settings.labelFont,
     weight = settings.labelWeight,
-    color = settings.labelColor.attribute
-      ? data[settings.labelColor.attribute] || settings.labelColor.color || "#000"
-      : settings.labelColor.color;
+    color = "#000";
+    //color = settings.labelColor.attribute
+    //  ? data[settings.labelColor.attribute] || settings.labelColor.color || "#000"
+    //  : settings.labelColor.color;
 
     const PADDING = 3;
 
@@ -23,6 +27,9 @@ customDrawLabel = function(
   var lineHeight = size;
   var y = data.y + size / 3;
   if (singleLine) {
+    if (drawFrame) {
+        customDrawHover(context, data, settings, true);
+    }
     context.fillText(lines[0], data.x + data.size + 3, y);
   } else {
     for (var i = 0; i < lines.length; i++) {
@@ -33,19 +40,25 @@ customDrawLabel = function(
 }
 
 customDrawHover = function (
-  context, data, settings
+  context, data, settings, singleLine
   ) {
     const size = settings.labelSize,
       font = settings.labelFont,
       weight = "bold";
+
+  if (singleLine === undefined) {
+      singleLine = false;
+  }
   
     context.font = `${weight} ${size}px ${font}`;
   
     context.fillStyle = "white";
     context.shadowOffsetX = 0;
     context.shadowOffsetY = 0;
-    context.shadowBlur = 6;
+    context.shadowBlur = 10;
     context.shadowColor = "black";
+
+
   
     const PADDING = 3;
   
@@ -61,6 +74,9 @@ customDrawHover = function (
       );
 
     var lines = data.label.split("\n");
+        if (singleLine) {
+            lines = lines.slice(0, 1);
+        }
     //boxHeight = boxHeight * lines.length;
         
     //boxWidth = lines.forEach(function(line) { 
@@ -74,13 +90,16 @@ customDrawHover = function (
   }
         boxWidth = Math.round(boxWidth + 5);
 
+       //if (singleLine) xDeltaCoord = 0;
   
       context.beginPath();
       context.moveTo(data.x + xDeltaCoord, data.y + boxHeight / 2 + Math.round(size + PADDING) * (lines.length - 1));
       context.lineTo(data.x + radius + boxWidth, data.y + boxHeight / 2 + Math.round(size + PADDING) * (lines.length - 1));
       context.lineTo(data.x + radius + boxWidth, data.y - boxHeight / 2);
       context.lineTo(data.x + xDeltaCoord, data.y - boxHeight / 2);
+        if (!singleLine) {
       context.arc(data.x, data.y, radius, angleRadian, -angleRadian);
+        }
       context.closePath();
       context.fill();
     } else {
@@ -95,7 +114,7 @@ customDrawHover = function (
     context.shadowBlur = 0;
   
     // And finally we draw the label
-    customDrawLabel(context, data, settings, false);
+    customDrawLabel(context, data, settings, singleLine, false);
   }
 
 
