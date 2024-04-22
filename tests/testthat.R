@@ -1,3 +1,3 @@
 library(testthat)
-library(sigmajs)
-test_check('sigmajs')
+library(sigmagraph)
+test_check('sigmagraph')
