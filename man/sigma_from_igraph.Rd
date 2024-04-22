@@ -10,7 +10,8 @@ sigma_from_igraph(
   label_color = "#fff",
   width = NULL,
   height = NULL,
-  elementId = NULL
+  elementId = NULL,
+  label_grid_cell_size = 200
 )
 }
 \arguments{

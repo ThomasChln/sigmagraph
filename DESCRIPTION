@@ -8,8 +8,10 @@ Authors@R: c(person("Thomas", "Charlon", role = c("aut", "cre"),
              person("PARSE Health", role = "aut", comment = "<https://parse-health.org>"))
 Description: Htmlwidget wrapper for the sigma.js network visualization v2.4.0, inspired by the sigmaNet package.
 Imports:
-    htmlwidgets,
+    cowplot,
+    ggplot2,
     grDevices,
+    htmlwidgets,
     igraph,
     jsonlite,
     magrittr,

@@ -4,7 +4,12 @@
 \alias{add_edge_color}
 \title{Modify the edge colors of a sigmagraph object.}
 \usage{
-add_edge_color(sigma_obj, one_color = NULL)
+add_edge_color(
+  sigma_obj,
+  one_color = NULL,
+  color_attr = NULL,
+  color_palette = "Set2"
+)
 }
 \arguments{
 \item{sigma_obj}{Sigmagraph object}
@@ -16,6 +21,7 @@ Sigmagraph with modified edge colors
 }
 \description{
 Modify the edge colors of a sigmagraph object by providing a single color.
+Also works with a vector of correct size.
 }
 \examples{
 library(igraph)

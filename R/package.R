@@ -1,12 +1,15 @@
 #' @import htmlwidgets
+#' @importFrom cowplot get_legend
+#' @importFrom ggplot2 aes element_text ggplot geom_point scale_color_manual
+#'                     theme theme_bw
 #' @importFrom grDevices colorRampPalette
 #' @importFrom igraph as_data_frame betweenness closeness degree
 #'                    graph_from_data_frame is.directed
 #'                    layout_nicely vertex_attr edge_attr
 #'                    upgrade_graph
 #' @importFrom jsonlite fromJSON toJSON
-#' @importFrom RColorBrewer brewer.pal
 #' @importFrom magrittr %>% %<>% %$%
+#' @importFrom RColorBrewer brewer.pal
 NULL
 
 #' Magrittr pipe operator
