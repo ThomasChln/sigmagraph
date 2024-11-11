@@ -1,5 +1,7 @@
 # sigmagraph
 
+## ARCHIVED PACKAGE: latest version is "sgraph", available on CRAN and in my repos
+
 R package: sigma.js network visualization v2.4.0
 
 Htmlwidget wrapper for the sigma.js network visualization v2.4.0, inspired by the sigmaNet package.
